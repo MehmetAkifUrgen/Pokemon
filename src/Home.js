@@ -1,13 +1,22 @@
 import React,{useState,useEffect} from 'react';
-import { Text, View,FlatList ,StyleSheet,TouchableOpacity,Image, TouchableHighlight} from 'react-native';
+// import store from "../store/pockemonSlice.js"; 
+import { useSelector, useDispatch } from 'react-redux'
+import { add, remove,pockemonList } from '../store/pockemonSlice.js'
+import { Text, View,FlatList ,StyleSheet,TouchableOpacity,Image, Button} from 'react-native';
 
 const Home = ({
     navigation,
 }) => {
     const [data,setData]=useState([])
+    // bunu favoriye taşı
+    const list = useSelector(pockemonList)
+    // dispatch kalacak
+    const dispatch = useDispatch()
+
     
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [favorite,setFavorite]=useState([])
 
     const  getPoke =async () => {
         
@@ -23,8 +32,13 @@ const Home = ({
         alert('You tapped the button!')
       }
     
-     const _onLongPressButton = ()=> {
-        alert('You long-pressed the button!')
+     const handlePress = ()=> {
+        console.log('/*/*/*',list)
+        dispatch(add("hasan"))
+      }
+      const removeData = ()=> {
+        console.log('/*/*/*',list)
+        dispatch(remove(1))
       }
     
 
@@ -54,20 +68,24 @@ const Home = ({
      }
 
     
-
+    
     const renderItem = ({item,index}) => {
         const url=item.url        
         return(
-            <TouchableHighlight onPress={()=> navigation.navigate('Detail',{url}) } onLongPress={_onLongPressButton} underlayColor="white" style={styles.pokemon}>
+            <TouchableOpacity onPress={()=> handlePress() }   style={styles.pokemon}>
                 <View style={styles.pokemon}>
                 <Image style={{width:100,height:80}} source={{uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${index+1}.png`}}  ></Image>
                 <Text> {item.name} </Text>
                 </View>
-            </TouchableHighlight>
+            </TouchableOpacity>
         )
     }
     return(
         <View style={styles.container}>
+            <View style={{backgroundColor:'pink',height:500,justifyContent:'center',alignItems:'center'}}>
+                <Text> TEXT :{list} </Text>
+                <Button title="sil" onPress={()=> removeData()} ></Button>
+            </View>
             <FlatList
             
                 renderItem={renderItem}
@@ -76,6 +94,7 @@ const Home = ({
                 initialNumToRender={7}
             
             />
+            
         </View>
     )
 }
@@ -88,7 +107,7 @@ const styles=StyleSheet.create({
     },
     pokemon:{
     
-        flex:1,  
+         
         marginHorizontal:'0.6%',
         alignItems:'center',
         marginBottom:'2%',

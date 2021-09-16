@@ -114,13 +114,17 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native'
 import Navigator from './src/Navigator'
+import store from './store/store'
+import { Provider } from 'react-redux'
 
 const App = ({
     params,
 }) => (
+  <Provider store={store}>
     <NavigationContainer>
       <Navigator/>
     </NavigationContainer>
+    </Provider>
 );
 
 export default App;
